@@ -1,0 +1,7 @@
+*/node_modules/
+*/test-results/
+.nyc_output
+*/uploads/
+*/dist/
+*/.env
+e2e/results.json

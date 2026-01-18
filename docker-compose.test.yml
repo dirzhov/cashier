@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: pos_test
+      POSTGRES_USER: pos
+      POSTGRES_PASSWORD: pos
+    ports:
+      - "5433:5432"
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql://pos:pos@postgres:5432/pos_test
+      JWT_SECRET: testsecret
+    depends_on:
+      - postgres
+    ports:
+      - "3001:3000"
+    command: >
+      sh -c "
+      npx prisma migrate deploy &&
+      npx prisma db seed &&
+      node dist/main.js
+      "
+  
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.57.0-noble
+    depends_on:
+      - frontend
+    working_dir: /tests
+    volumes:
+      - ./e2e:/tests
+    command: npm test

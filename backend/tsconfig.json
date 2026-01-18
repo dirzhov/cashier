@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    /* Target & Modules */
+    "target": "ES2022",
+    "module": "CommonJS",
+    // "moduleResolution": "Bundler",
+
+    /* Paths */
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    /* Strictness */
+    "strict": true,
+    "noImplicitAny": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Interop */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Performance */
+    "skipLibCheck": true,
+
+    "sourceMap": true,
+
+    /* Extras */
+    "resolveJsonModule": true,
+    "types": ["node", "vitest/globals"]
+  },
+  "include": [
+    "src/**/*.ts",
+    // "prisma/seed.ts",
+    // "test/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

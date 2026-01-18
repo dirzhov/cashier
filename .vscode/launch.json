@@ -1,0 +1,41 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Backend: Fastify (tsx)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "watch"],
+      "program": "src/server.ts",
+      "cwd": "${workspaceFolder}/backend",
+      "env": {
+        "NODE_ENV": "development",
+        "DATABASE_URL": "postgresql://pos:pos@localhost:5432/pos_test",
+        "JWT_SECRET": "dev-secret"
+      },
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Frontend: Vite + Vue (Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend",
+      "preLaunchTask": "frontend:dev",
+      "sourceMaps": true
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Fullstack: Frontend + Backend",
+      "configurations": [
+        "Backend: Fastify (tsx)",
+        "Frontend: Vite + Vue (Chrome)"
+      ]
+    }
+  ]
+}

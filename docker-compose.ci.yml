@@ -1,0 +1,73 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: pos
+      POSTGRES_USER: pos
+      POSTGRES_PASSWORD: pos
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -h localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://pos:pos@postgres:5432/pos
+      JWT_SECRET: test
+      NODE_ENV: test
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: http://backend:3000
+
+  seed:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+      target: builder
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://pos:pos@postgres:5432/pos
+      NODE_ENV: test
+    command: >
+      sh -c "
+      npx prisma migrate deploy &&
+      npx prisma db seed
+      "
+
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.57.0-noble
+    depends_on:
+      - seed
+      - frontend
+    working_dir: /tests
+    volumes:
+      - ./e2e:/tests
+    environment:
+      BASE_URL: http://frontend
+      PW_HEADLESS: true
+      PW_VIDEO: true
+      APP_DEFAULT_LANG: "ru"
+      TIMEOUT: 5000
+      EXPECT_TIMEOUT: 5000
+    command: >
+      sh -c "
+      npm ci &&
+      npx playwright install --with-deps &&
+      npx playwright test --grep @ci
+      "
