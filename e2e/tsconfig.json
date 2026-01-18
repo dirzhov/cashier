@@ -1,0 +1,70 @@
+{
+  "compilerOptions": {
+    /* =========================
+       Target / Runtime
+    ========================= */
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "useDefineForClassFields": false,
+
+    /* =========================
+       Types
+    ========================= */
+    "types": [
+      "node",
+      "@playwright/test"
+    ],
+
+    /* =========================
+       Strictness
+    ========================= */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+
+    /* =========================
+       DX
+    ========================= */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+
+    /* =========================
+       Speed (важно для Playwright)
+    ========================= */
+    "isolatedModules": true,
+    "skipLibCheck": true,
+
+    /* =========================
+       Paths (удобно для DAL/fixtures)
+    ========================= */
+    "baseUrl": ".",
+    "paths": {
+      "@dal/*": ["entities/dal/*"],
+      "@entities/*": ["entities/*"],
+      "@fixtures/*": ["fixtures/*"],
+      "@utils/*": ["utils/*"]
+    },
+
+    /* =========================
+       Output (если вдруг нужен tsc)
+    ========================= */
+    "outDir": "dist",
+    "rootDir": ".",
+
+    /* =========================
+       Source maps
+    ========================= */
+    "sourceMap": true
+  },
+
+  "include": [
+    "**/*.ts"
+  ],
+
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

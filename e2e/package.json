@@ -1,0 +1,27 @@
+{
+  "name": "e2e",
+  "private": true,
+  "scripts": {
+    "install": "npx playwright install",
+    "test": "npx playwright test",
+    "pulse-reports": "npx generate-pulse-report --outputDir test-results/pulse-report && npx merge-pulse-report --outputDir test-results/pulse-report",
+    "pulse-merge": "npx merge-pulse-report --outputDir test-results/pulse-report",
+    "coverage:e2e": "nyc report --reporter=html --reporter=text --report-dir=test-results/coverage"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.41.1",
+    "@types/bcrypt": "^6.0.0",
+    "@types/node": "^25.0.9",
+    "@types/pg": "^8.16.0",
+    "pg": "^8.17.2"
+  },
+  "dependencies": {
+    "@arghajit/playwright-pulse-report": "^0.3.2",
+    "dotenv": "^17.2.3",
+    "mysql2": "^3.16.1",
+    "nyc": "^17.1.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.7",
+    "ts-retry": "^6.0.0"
+  }
+}

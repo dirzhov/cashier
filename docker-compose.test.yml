@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: pos_test
+      POSTGRES_USER: pos
+      POSTGRES_PASSWORD: pos
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s # Gives the DB time to initialize on first run
+    volumes:
+      - testpgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+
+  seed:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: builder
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://pos:pos@postgres:5432/pos_test
+      NODE_ENV: test
+    command: >
+      sh -c "
+      npx prisma migrate deploy &&
+      npx prisma db seed
+      "
+
+
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.57.0-noble
+    working_dir: /tests
+    volumes:
+      - ./e2e:/tests
+    environment:
+      BASE_URL: http://localhost:5173
+      PW_VIDEO: true
+      PW_HEADLESS: true
+      APP_DEFAULT_LANG: "ru"
+      TIMEOUT: 5000
+      EXPECT_TIMEOUT: 5000
+      ISTANBUL_COVERAGE: true
+    command: npx playwright test --grep @ci
+
+volumes:
+  testpgdata:
+
